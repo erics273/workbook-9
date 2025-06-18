@@ -2,7 +2,9 @@ package com.pluralsight.NorthwindTradersAPI.dao;
 
 import com.pluralsight.NorthwindTradersAPI.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -93,7 +95,7 @@ public class JdbcProductDao implements ProductDao {
                 product.setCategoryId(rs.getInt("CategoryID"));
 
             }else{
-                return null;
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             }
 
         } catch (SQLException e) {
