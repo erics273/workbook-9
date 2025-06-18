@@ -30,7 +30,7 @@ public class JdbcFilmDao implements FilmDao {
     // This method will add a new Film to the database.
     // It is required because we are implementing the FilmDao interface.
     @Override
-    public void add(Film film) {
+    public Film add(Film film) {
         // This is the SQL INSERT statement we will run.
         // We are inserting the film title, rental rate, and language_id.
         String sql = "INSERT INTO film (title, rental_rate, language_id) VALUES (?, ?, ?)";
@@ -38,7 +38,7 @@ public class JdbcFilmDao implements FilmDao {
         // This is a "try-with-resources" block.
         // It ensures that the Connection and PreparedStatement are closed automatically after we are done.
         try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             // Set the first parameter (?) to the film's title.
             stmt.setString(1, film.getTitle());
@@ -54,10 +54,20 @@ public class JdbcFilmDao implements FilmDao {
             // Execute the INSERT statement — this will add the row to the database.
             stmt.executeUpdate();
 
+            // Retrieve the generated film_id
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    int newId = keys.getInt(1);
+                    film.setFilmId(newId); // Set the generated ID on the Film object
+                }
+            }
+
         } catch (SQLException e) {
             // If something goes wrong (SQL error), print the stack trace to help debug.
             e.printStackTrace();
         }
+
+        return film;
     }
 
     // This method will return a list of all Films from the database.
@@ -101,5 +111,51 @@ public class JdbcFilmDao implements FilmDao {
 
         // Return the list of Film objects.
         return films;
+    }
+
+    @Override
+    public Film findById(int id) {
+
+        Film film = new Film();
+
+        // This is the SQL SELECT statement we will run.
+        String sql = "SELECT film_id, title, rental_rate FROM film WHERE film_id = ?";
+
+        // This is a "try-with-resources" block.
+        // It ensures that the Connection, Statement, and ResultSet are closed automatically after we are done.
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ) {
+
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery(sql);
+
+
+            // Loop through each row in the ResultSet.
+            while (rs.next()) {
+                // Create a new Film object.
+                System.out.println("eric");
+
+                // Set the film's ID from the "film_id" column.
+                film.setFilmId(rs.getInt("film_id"));
+
+                // Set the film's title from the "title" column.
+                film.setTitle(rs.getString("title"));
+
+                // Set the film's rental rate from the "rental_rate" column.
+                film.setRentalRate(rs.getDouble("rental_rate"));
+
+
+            }
+
+
+        } catch (SQLException e) {
+            // If something goes wrong (SQL error), print the stack trace to help debug.
+            e.printStackTrace();
+        }
+
+        // Return the list of Film objects.
+        return film;
     }
 }

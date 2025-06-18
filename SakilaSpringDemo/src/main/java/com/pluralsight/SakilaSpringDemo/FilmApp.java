@@ -1,7 +1,6 @@
 package com.pluralsight.SakilaSpringDemo;
 
 import com.pluralsight.SakilaSpringDemo.dao.FilmDao;
-import com.pluralsight.SakilaSpringDemo.dao.SimpleFilmDao;
 import com.pluralsight.SakilaSpringDemo.models.Film;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

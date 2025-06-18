@@ -4,10 +4,8 @@ import com.pluralsight.SakilaSpringDemo.dao.FilmDao;
 import com.pluralsight.SakilaSpringDemo.models.Film;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,15 +17,31 @@ public class FilmController {
     private FilmDao filmDao;
 
     @GetMapping("/api/films")
-    public List<Film> getFilms(){
+    public List<Film> getAllFilms(){
         return filmDao.getAll();
     }
 
-    @GetMapping("/")
-    public String defaultRequest(@RequestParam String name, @RequestParam String favColor){
-        return "Hello " + name + " I hear your favorit color is " + favColor;
+    @GetMapping("/api/films/{id}")
+    public Film getAllFilms(@PathVariable int id){
+        return filmDao.findById(id);
     }
 
+    @PostMapping("/api/films")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public Film addFilm(@RequestBody Film film){
+        return filmDao.add(film);
+    }
 
+//    @PutMapping("/api/films/{id}")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public void updateFilm(@PathVariable int id, @RequestBody Film film){
+//        filmDao.updateFilm(id, film);
+//    }
+//
+//    @DeleteMapping("/api/films/{id}")
+//    @ResponseStatus(value = HttpStatus.OK)
+//    public void deleteFilm(@PathVariable int id){
+//        filmDao.deleteFilm(id);
+//    }
 
 }

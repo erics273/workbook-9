@@ -1,14 +1,8 @@
 package com.pluralsight.SakilaSpringDemo;
 
 // These are special Spring Boot imports that let us start the app.
-import com.pluralsight.SakilaSpringDemo.dao.FilmDao;
-import com.pluralsight.SakilaSpringDemo.dao.SimpleFilmDao;
-import com.pluralsight.SakilaSpringDemo.models.Film;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.List;
-import java.util.Scanner;
 
 // This is a special annotation that tells Spring Boot:
 // "This is the main class for your application."
