@@ -44,7 +44,7 @@ public class JdbcProductDao implements ProductDao {
                 product.setUnitPrice(rs.getDouble("UnitPrice"));
 
                 // Set the product's category id from the "CategoryID" column.
-                product.setUnitPrice(rs.getDouble("CategoryID"));
+                product.setCategoryId(rs.getInt("CategoryID"));
 
                 // Add the Film object to our list.
                 products.add(product);
@@ -102,6 +102,46 @@ public class JdbcProductDao implements ProductDao {
         }
 
         // Return the list of Film objects.
+        return product;
+    }
+
+    @Override
+    public Product add(Product product) {
+        // This is the SQL INSERT statement we will run.
+        // We are inserting the Product Name, Category ID, and Unit Price.
+        String sql = "INSERT INTO Products (ProductName, CategoryID, UnitPrice) VALUES (?, ?, ?)";
+
+        // This is a "try-with-resources" block.
+        // It ensures that the Connection and PreparedStatement are closed automatically after we are done.
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Set the first parameter (?) to the products name.
+            stmt.setString(1, product.getProductName());
+
+            // Set the second parameter (?) to the products category id.
+            stmt.setInt(2, product.getCategoryId());
+
+            // Set the third parameter (?) to the unit price.
+            stmt.setDouble(3, product.getUnitPrice());
+
+            // Execute the INSERT statement — this will add the row to the database.
+            stmt.executeUpdate();
+
+            // Retrieve the generated film_id
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    int newId = keys.getInt(1);
+                    product.setProductId(newId); // Set the generated ID on the Film object
+                }
+            }
+
+
+        } catch (SQLException e) {
+            // If something goes wrong (SQL error), print the stack trace to help debug.
+            e.printStackTrace();
+        }
+
         return product;
     }
 
