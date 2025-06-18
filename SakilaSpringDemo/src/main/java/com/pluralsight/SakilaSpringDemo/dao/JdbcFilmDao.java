@@ -129,13 +129,12 @@ public class JdbcFilmDao implements FilmDao {
 
             stmt.setInt(1, id);
 
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery();
 
 
             // Loop through each row in the ResultSet.
             while (rs.next()) {
                 // Create a new Film object.
-                System.out.println("eric");
 
                 // Set the film's ID from the "film_id" column.
                 film.setFilmId(rs.getInt("film_id"));
