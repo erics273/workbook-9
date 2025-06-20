@@ -28,4 +28,9 @@ public class ProductController {
         return productDao.add(product);
     }
 
+    @PutMapping("/api/products/{id}")
+    public void update(@PathVariable int id, @RequestBody Product product){
+        productDao.updateById(id, product);
+    }
+
 }

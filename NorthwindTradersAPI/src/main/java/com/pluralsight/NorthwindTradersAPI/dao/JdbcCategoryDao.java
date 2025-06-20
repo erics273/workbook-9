@@ -1,7 +1,6 @@
 package com.pluralsight.NorthwindTradersAPI.dao;
 
 import com.pluralsight.NorthwindTradersAPI.models.Category;
-import com.pluralsight.NorthwindTradersAPI.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -130,5 +129,31 @@ public class JdbcCategoryDao implements CategoryDao {
 
         return category;
     }
+
+    @Override
+    public void updateById(int id, Category category) {
+        String sql = """
+                UPDATE
+                    Categories 
+                SET 
+                    CategoryName = COALESCE(?, CategoryName) 
+                WHERE 
+                    CategoryID = ?
+                """;
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, category.getCategoryName());
+            stmt.setInt(2, id);
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 }
