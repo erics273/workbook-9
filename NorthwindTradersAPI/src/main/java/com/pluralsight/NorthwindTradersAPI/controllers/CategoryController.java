@@ -34,4 +34,9 @@ public class CategoryController {
     public void update(@PathVariable int id, @RequestBody Category category){
         categoryDao.updateById(id, category);
     }
+
+    @DeleteMapping("/api/categories/{id}")
+    public void delete(@PathVariable int id){
+        categoryDao.deleteById(id);
+    }
 }

@@ -155,5 +155,21 @@ public class JdbcCategoryDao implements CategoryDao {
 
     }
 
+    @Override
+    public void deleteById(int id) {
+        String sql = "DELETE FROM Categories WHERE CategoryID = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 }

@@ -13,7 +13,7 @@ public interface CategoryDao {
 
     Category findById(int id);
 
-   // void deleteById(int id);
+    void deleteById(int id);
 
     void updateById(int id, Category category);
 

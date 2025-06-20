@@ -12,7 +12,7 @@ public interface ProductDao {
 
     Product findById(int id);
 
-   // void deleteById(int id);
+    void deleteById(int id);
 
     void updateById(int id, Product product);
 
